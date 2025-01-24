@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/deanfirdianza/dauth-be-go/modules/user/v1/services"
+	"github.com/deanfirdianza/dauth-be-go/modules/users/v1/services"
 	"github.com/gin-gonic/gin"
 )
 

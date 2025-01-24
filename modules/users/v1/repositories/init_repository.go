@@ -7,7 +7,7 @@ import (
 )
 
 type (
-	authRepository struct {
+	userRepository struct {
 		// ...database connection or other dependencies...
 		db   *sqlx.DB
 		stmt map[string]*sqlx.Stmt
@@ -20,17 +20,11 @@ type (
 )
 
 const (
-	schema = `auths`
+	schema = `users`
 )
 
-type AuthRepository interface {
-	// ...define repository methods...
-	// CreateUserAuth(username, password, email, salt string) error
-	// GetAuthByUsername(username string) (models, error)
-}
-
-func NewAuthRepository(db *sqlx.DB) AuthRepository {
-	r := &authRepository{
+func NewUserRepository(db *sqlx.DB) UserRepository {
+	r := &userRepository{
 		db: db,
 	}
 	r.initStmt()
@@ -38,19 +32,19 @@ func NewAuthRepository(db *sqlx.DB) AuthRepository {
 	return r
 }
 
-func (r *authRepository) initStmt() {
+func (r *userRepository) initStmt() {
 	var (
 		err     error
 		stmtMap = make(map[string]*sqlx.Stmt)
 		stmts   []statement
 	)
 
-	stmts = append(stmts, authStmts...)
+	stmts = append(stmts, userStmts...)
 
 	for _, v := range stmts {
 		stmtMap[v.query], err = r.db.Preparex(v.query)
 		if err != nil {
-			log.Fatalf("Failed to initialize auth statement key %v, err : %v", v.key, err)
+			log.Fatalf("Failed to initialize user statement key %v, err : %v", v.key, err)
 		}
 	}
 

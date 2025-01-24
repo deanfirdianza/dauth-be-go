@@ -1,7 +1,7 @@
 package services
 
 import (
-	"github.com/deanfirdianza/dauth-be-go/modules/user/v1/repositories"
+	"github.com/deanfirdianza/dauth-be-go/modules/users/v1/repositories"
 )
 
 type UserService interface {

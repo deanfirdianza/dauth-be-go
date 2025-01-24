@@ -8,6 +8,6 @@ import (
 
 var (
 	AuthRepo    = repository.NewAuthRepository(DBSqlx)
-	AuthService = service.NewAuthService(AuthRepo)
+	AuthService = service.NewAuthService(AuthRepo, UserRepo)
 	AuthHandler = handler.NewAuthHandler(AuthService)
 )

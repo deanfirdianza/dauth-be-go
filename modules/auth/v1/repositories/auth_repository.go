@@ -4,7 +4,7 @@ package repositories
 
 var (
 	authStmts = []statement{
-		{"select", qAuthSelect},
+		// {"select", qAuthSelect},
 	}
 )
 
