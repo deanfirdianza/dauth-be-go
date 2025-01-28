@@ -6,7 +6,7 @@ import (
 
 // ...existing code...
 
-type User struct {
+type Accounts struct {
 	ID        uint      `db:"id"`
 	Username  string    `db:"username"`
 	Email     string    `db:"email"`

@@ -6,12 +6,13 @@ import (
 	"fmt"
 
 	repository "github.com/deanfirdianza/dauth-be-go/modules/auth/v1/repositories"
+	"github.com/deanfirdianza/dauth-be-go/modules/users/v1/models"
 	userRepo "github.com/deanfirdianza/dauth-be-go/modules/users/v1/repositories"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type AuthService interface {
-	Login(username, password string) (string, error)
+	Login(username, password string) (models.Accounts, error)
 	Register(username, email, password string) error
 }
 
@@ -30,15 +31,27 @@ func NewAuthService(
 	}
 }
 
-func (s *authService) Login(username, password string) (string, error) {
+func (s *authService) Login(username, password string) (models.Accounts, error) {
 	// ...implement login logic...
-	return "token", nil
+	userModel, err := s.userRepo.SelectUser(username)
+	if err != nil {
+		return models.Accounts{}, err
+	}
+
+	// Check if the password is correct
+	err = bcrypt.CompareHashAndPassword([]byte(userModel.Password), []byte(password+userModel.Salt))
+	if err != nil {
+		fmt.Println("err : ", err)
+		return models.Accounts{}, fmt.Errorf("invalid password")
+	}
+
+	return *userModel, nil
 }
 
 func (s *authService) Register(username, email, password string) error {
 	// ...implement register logic...
 
-	salt, err := GenerateRandomSalt()
+	salt, err := generateRandomSalt()
 	if err != nil {
 		return err
 	}
@@ -58,23 +71,21 @@ func (s *authService) Register(username, email, password string) error {
 }
 
 func generatePasswordHash(password string, salt string) (string, error) {
-	// Combine password and salt
-	passwordWithSalt := password + salt
-
 	// Hash the password + salt using bcrypt
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(passwordWithSalt), bcrypt.DefaultCost)
+	fmt.Println("password : ", password+salt)
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password+salt), bcrypt.DefaultCost)
 	if err != nil {
 		return "", err
 	}
-
 	return string(hashedPassword), nil
 }
 
-func GenerateRandomSalt() (string, error) {
+func generateRandomSalt() (string, error) {
 	salt := make([]byte, 16) // 16 bytes of random data
 	_, err := rand.Read(salt)
 	if err != nil {
 		return "", err
 	}
+	fmt.Println("salt : ", base64.StdEncoding.EncodeToString(salt))
 	return base64.StdEncoding.EncodeToString(salt), nil
 }
