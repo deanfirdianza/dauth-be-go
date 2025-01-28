@@ -25,16 +25,14 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	fmt.Println("login : ", login.Username)
-	fmt.Println("login : ", login.Password)
+
 	models, err := h.authService.Login(login.Username, login.Password)
 	if err != nil {
 		c.JSON(http.StatusNotAcceptable, gin.H{"error": err.Error()})
 		return
 	}
-	fmt.Println("models : ", models)
 
-	c.JSON(http.StatusOK, gin.H{"message": "login successful"})
+	c.JSON(http.StatusOK, gin.H{"message": models.Username + " login successful"})
 }
 
 func (h *AuthHandler) Register(c *gin.Context) {

@@ -41,7 +41,6 @@ func (s *authService) Login(username, password string) (models.Accounts, error) 
 	// Check if the password is correct
 	err = bcrypt.CompareHashAndPassword([]byte(userModel.Password), []byte(password+userModel.Salt))
 	if err != nil {
-		fmt.Println("err : ", err)
 		return models.Accounts{}, fmt.Errorf("invalid password")
 	}
 

@@ -2,12 +2,12 @@ package models
 
 import (
 	"time"
+
+	"github.com/google/uuid"
 )
 
-// ...existing code...
-
 type Accounts struct {
-	ID        uint      `db:"id"`
+	ID        uuid.UUID `db:"id"`
 	Username  string    `db:"username"`
 	Email     string    `db:"email"`
 	Password  string    `db:"password"`
