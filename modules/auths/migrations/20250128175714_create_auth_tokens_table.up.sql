@@ -4,5 +4,5 @@ CREATE TABLE auths.auth_tokens (
     refresh_token TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     expires_at TIMESTAMP NOT NULL,
-    revoked BOOLEAN DEFAULT FALSE
+    revoked BOOLEAN NOT NULL DEFAULT FALSE,
 );
