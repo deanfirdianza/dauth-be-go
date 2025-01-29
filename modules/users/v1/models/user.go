@@ -16,4 +16,9 @@ type Accounts struct {
 	UpdatedAt time.Time `db:"updated_at"`
 }
 
+type Tokens struct {
+	AccessToken  string `json:"access_token"`
+	RefreshToken string `json:"refresh_token"`
+}
+
 // ...existing code...

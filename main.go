@@ -5,7 +5,7 @@ import (
 
 	"github.com/deanfirdianza/dauth-be-go/app/driver"
 	"github.com/deanfirdianza/dauth-be-go/app/middlewares"
-	authRoutes "github.com/deanfirdianza/dauth-be-go/modules/auth/v1/routes"
+	authRoutes "github.com/deanfirdianza/dauth-be-go/modules/auths/v1/routes"
 	userRoutes "github.com/deanfirdianza/dauth-be-go/modules/users/v1/routes"
 	"github.com/gin-gonic/gin"
 )

@@ -17,7 +17,7 @@ var (
 )
 
 const (
-	qUserMainField = `username, password, email, salt, created_at, updated_at`
+	qUserMainField = `id, username, password, email, salt, created_at, updated_at`
 	qUserSelect    = `SELECT ` + qUserMainField + ` FROM ` + schema + `.accounts WHERE username = $1`
 	qUserInsert    = `INSERT INTO ` + schema + `.accounts(username, password, email, salt, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6)`
 )
@@ -63,6 +63,7 @@ func (r *userRepository) SelectUser(username string) (*models.Accounts, error) {
 
 	var user models.Accounts
 	err = stmt.QueryRow(username).Scan(
+		&user.ID,
 		&user.Username,
 		&user.Password,
 		&user.Email,

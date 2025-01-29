@@ -23,12 +23,6 @@ const (
 	schema = `auths`
 )
 
-type AuthRepository interface {
-	// ...define repository methods...
-	// CreateUserAuth(username, password, email, salt string) error
-	// GetAuthByUsername(username string) (models, error)
-}
-
 func NewAuthRepository(db *sqlx.DB) AuthRepository {
 	r := &authRepository{
 		db: db,
