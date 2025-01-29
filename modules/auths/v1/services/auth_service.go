@@ -14,18 +14,18 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+type authService struct {
+	secretKey string
+	authRepo  repository.AuthRepository
+	userRepo  userRepo.UserRepository
+}
+
 type AuthService interface {
 	Login(username, password string) (models.Tokens, error)
 	Register(username, email, password string) error
 	GenerateJWT(username string, expiry time.Duration) (string, error)
 	ValidateJWT(tokenString string) (jwt.MapClaims, error)
 	RefreshJWTToken(refreshToken string) (models.Tokens, error)
-}
-
-type authService struct {
-	secretKey string
-	authRepo  repository.AuthRepository
-	userRepo  userRepo.UserRepository
 }
 
 func NewAuthService(
@@ -42,7 +42,7 @@ func NewAuthService(
 
 func (s *authService) Login(username, password string) (models.Tokens, error) {
 	// ...implement login logic...
-	userModel, err := s.userRepo.SelectUser(username)
+	userModel, err := s.userRepo.FindByUsername(username)
 	if err != nil {
 		return models.Tokens{}, err
 	}
@@ -70,6 +70,9 @@ func (s *authService) Login(username, password string) (models.Tokens, error) {
 	}
 
 	_, err = s.authRepo.InsertAuth(userModel.ID.String(), refreshToken, time.Now().Add(7*24*time.Hour), false)
+	if err != nil {
+		return models.Tokens{}, err
+	}
 
 	return models.Tokens{
 		AccessToken:  accessToken,

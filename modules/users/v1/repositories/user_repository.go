@@ -11,20 +11,23 @@ import (
 
 var (
 	userStmts = []statement{
-		{"qUserSelect", qUserSelect},
+		{"qUserSelectByUsername", qUserSelectByUsername},
+		{"qUserSelectByID", qUserSelectByID},
 		{"qUserInsert", qUserInsert},
 	}
 )
 
 const (
-	qUserMainField = `id, username, password, email, salt, created_at, updated_at`
-	qUserSelect    = `SELECT ` + qUserMainField + ` FROM ` + schema + `.accounts WHERE username = $1`
-	qUserInsert    = `INSERT INTO ` + schema + `.accounts(username, password, email, salt, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6)`
+	qUserMainField        = `id, username, password, email, salt, created_at, updated_at`
+	qUserSelectByUsername = `SELECT ` + qUserMainField + ` FROM ` + schema + `.accounts WHERE username = $1`
+	qUserSelectByID       = `SELECT ` + qUserMainField + ` FROM ` + schema + `.accounts WHERE id = $1`
+	qUserInsert           = `INSERT INTO ` + schema + `.accounts(username, password, email, salt, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6)`
 )
 
 type UserRepository interface {
 	InsertUser(username string, password string, email string, salt string) (sql.Result, error)
-	SelectUser(username string) (*models.Accounts, error)
+	FindByUsername(username string) (*models.Accounts, error)
+	FindByID(uid string) (*models.Accounts, error)
 }
 
 func (r *userRepository) InsertUser(
@@ -54,8 +57,8 @@ func (r *userRepository) InsertUser(
 	return result, nil
 }
 
-func (r *userRepository) SelectUser(username string) (*models.Accounts, error) {
-	stmt, err := r.db.Prepare(qUserSelect)
+func (r *userRepository) FindByUsername(username string) (*models.Accounts, error) {
+	stmt, err := r.db.Prepare(qUserSelectByUsername)
 	if err != nil {
 		return nil, err
 	}
@@ -63,6 +66,34 @@ func (r *userRepository) SelectUser(username string) (*models.Accounts, error) {
 
 	var user models.Accounts
 	err = stmt.QueryRow(username).Scan(
+		&user.ID,
+		&user.Username,
+		&user.Password,
+		&user.Email,
+		&user.Salt,
+		&user.CreatedAt,
+		&user.UpdatedAt,
+	)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	return &user, nil
+}
+
+func (r *userRepository) FindByID(uid string) (*models.Accounts, error) {
+	stmt, err := r.db.Prepare(qUserSelectByID)
+	if err != nil {
+
+		return nil, err
+	}
+	defer stmt.Close()
+
+	var user models.Accounts
+	err = stmt.QueryRow(uid).Scan(
 		&user.ID,
 		&user.Username,
 		&user.Password,

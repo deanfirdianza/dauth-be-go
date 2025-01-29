@@ -28,7 +28,7 @@ func main() {
 	})
 
 	authRoutes.AuthRoutes(router, driver.AuthHandler)
-	userRoutes.UserRoutes(router, driver.UserHandler)
+	userRoutes.UserRoutes(router, driver.UserHandler, conf, driver.DBSqlx)
 	// AuthRoutes(router, conf, AuthHandler)
 
 	router.Run(":" + conf.App.Port)

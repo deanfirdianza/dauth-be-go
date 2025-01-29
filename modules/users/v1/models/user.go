@@ -7,13 +7,13 @@ import (
 )
 
 type Accounts struct {
-	ID        uuid.UUID `db:"id"`
-	Username  string    `db:"username"`
-	Email     string    `db:"email"`
-	Password  string    `db:"password"`
-	Salt      string    `db:"salt"`
-	CreatedAt time.Time `db:"created_at"`
-	UpdatedAt time.Time `db:"updated_at"`
+	ID        uuid.UUID `db:"id" json:"id"`
+	Username  string    `db:"username" json:"username"`
+	Email     string    `db:"email" json:"email"`
+	Password  string    `db:"password" json:"-"`
+	Salt      string    `db:"salt" json:"-"`
+	CreatedAt time.Time `db:"created_at" json:"created_at"`
+	UpdatedAt time.Time `db:"updated_at" json:"-"`
 }
 
 type Tokens struct {
